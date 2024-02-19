@@ -12,7 +12,7 @@ Running:
 ```
 cd BabylonAngularWebGPUBug
 npm install
-ng run
+ng serve
 ```
 then the application should be running on http://localhost:4200 or similar.
 Since the application is WebGPU based, Chrome Canary, Edge Canary or Firefox Nightly is needed.
