@@ -12,6 +12,8 @@ import {
   Vector3, HemisphericLight, ComputeShader
 } from "@babylonjs/core";
 
+import {CodeEditorModule, CodeModel} from "@ngstack/code-editor";
+
 import '@babylonjs/core/Engines/WebGPU/Extensions/';
 
 // shadows
@@ -29,18 +31,36 @@ import '@babylonjs/core/Animations/animatable'
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
+
 export class AppComponent {
   title = 'BabylonAngularWebGPUBug';
   @ViewChild('canvas', {static: true}) private canvas?: ElementRef<HTMLCanvasElement>;
   private engine?: WebGPUEngine;
   private scene?: Scene;
 
-  constructor(private ngZone: NgZone) {}
+  constructor(private ngZone: NgZone) {
+  }
+
+  theme = 'hc-black';
+
+  codeModel: CodeModel = {
+    language: 'wgsl',
+    uri: 'main.glsl',
+    value: `void main() {
+    gl_Position = worldViewProjection * position;
+}`
+  };
+
+  options = {
+    contextmenu: true,
+    minimap: {
+      enabled: true
+    }
+  };
+
   ngAfterViewInit(): void {
     if (this.canvas) {
       this.engine = new WebGPUEngine(this.canvas.nativeElement);
@@ -48,20 +68,19 @@ export class AppComponent {
     }
   }
 
-  async setupScene(this : AppComponent)
-  {
+  async setupScene(this: AppComponent) {
     console.log("Setup scene!");
     if (!navigator.gpu) {
       alert("Web GPU is not supported on your platform so far.");
       return;
     }
-    if(this.engine == undefined) return;
+    if (this.engine == undefined) return;
 
     await this.engine?.initAsync({},
-      {
-        jsPath: "https://cdn.babylonjs.com/twgsl/twgsl.js",
-        wasmPath: "https://cdn.babylonjs.com/twgsl/twgsl.wasm"
-      });
+        {
+          jsPath: "https://cdn.babylonjs.com/twgsl/twgsl.js",
+          wasmPath: "https://cdn.babylonjs.com/twgsl/twgsl.wasm"
+        });
     //this.engine.displayLoadingUI();
     if (this.canvas)
       this.scene = this.createScene(this.engine, this.canvas.nativeElement);
@@ -102,4 +121,6 @@ export class AppComponent {
 
     return scene;
   };
+
+  protected readonly alert = alert;
 }

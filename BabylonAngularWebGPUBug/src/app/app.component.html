@@ -7,7 +7,13 @@
 </style>
 
 <main class="main">
-  <div class="content">
-    <canvas #canvas></canvas>
+  <div class="content" style="display: flex">
+    <canvas #canvas style="width: 50%"></canvas>
+    <ngs-code-editor style="width: 50%; height: 100%"
+                     [theme]="theme"
+                     [codeModel]="codeModel"
+                     [options]="options"
+                     (valueChanged)="alert($event)">
+    </ngs-code-editor>
   </div>
 </main>
